@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cutoff Marks Calculator</title>
+    <style>
+        /* Styles remain unchanged */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(to right, blue, violet);
+        }
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            width: 80%;
+            background-color: transparent;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .college-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .content-container {
+            display: flex;
+            background-color: #ffffff5f;
+            border-radius: 10px;
+        }
+        .user-guide {
+            width: 25%;
+            padding: 20px;
+            background-color: #e9e4e49d;
+            border-right: 1px solid #ccc;
+        }
+        .calculator-container {
+            width: 75%;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        select, input {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            font-size: 16px;
+            background-color: transparent;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #78c77bf1;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #35b03b;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+        /* Styles for team details */
+        .team-details {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background-color: #ffffffd4;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <div class="college-name">KONGU ENGINEERING COLLEGE - PERUNDURAI</div>
+    <div class="college-name">COMPUTER NETWORKS - 22CST052</div>
+    <div class="content-container">
+        <div class="user-guide">
+            <h2>User Guide</h2>
+            <p>Welcome to the Cutoff Marks Calculator. To use this tool:</p>
+            <ol>
+                <li>Select your domain from the dropdown list.</li>
+                <li>Enter the relevant marks based on your selected domain.</li>
+                <li>Choose your preferred protocol (TCP/UDP).</li>
+                <li>Click "Calculate Cutoff" to view your cutoff score.</li>
+            </ol>
+        </div>
+
+        <div class="calculator-container">
+            <h1>Cutoff Marks Calculator</h1>
+            <form action="/calculate_cutoff" method="post" onsubmit="showResult()">
+                <select name="domain" id="domain" onchange="displayFields()" required>
+                    <option value="">Select Domain</option>
+                    <option value="engineering">Engineering</option>
+                    <option value="medical">Medical Science</option>
+                    <option value="commerce">Commerce & Accounts</option>
+                    <option value="law">Law</option>
+                    <option value="mba">MBA</option>
+                    <option value="msc">M.Sc.</option>
+                </select>
+
+                <div id="marksFields">
+                    <!-- Dynamic fields will appear here -->
+                </div>
+
+                <select name="protocol" required>
+                    <option value="">Select Protocol</option>
+                    <option value="TCP">TCP</option>
+                    <option value="UDP">UDP</option>
+                </select>
+
+                <button type="submit">Calculate Cutoff</button>
+            </form>
+            <div class="result" id="result">
+                {% if response %}
+                    Calculated Cutoff: {{ response }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Team details container fixed to the bottom right -->
+<div class="team-details">
+    <p>Team details:</p>
+    <p>ANANTHAKUMAR S (22CSR016)</p>
+    <p>ARULMURUGAN S (22CSR019)</p>
+    <p>CHANDRAN T (22CSR032)</p>
+</div>
+
+<script>
+    function displayFields() {
+        const domain = document.getElementById("domain").value;
+        const marksFields = document.getElementById("marksFields");
+        const resultDiv = document.getElementById("result");
+
+        marksFields.innerHTML = "";  // Clear previous fields
+
+        // Define fields based on domain selection
+        let fieldsHTML = "";
+        if (domain === "engineering") {
+            fieldsHTML = `
+                <input type="number" name="marks[]" placeholder="Physics Marks (out of 100)" required>
+                <input type="number" name="marks[]" placeholder="Chemistry Marks (out of 100)" required>
+                <input type="number" name="marks[]" placeholder="Math Marks (out of 100)" required>
+            `;
+        } else if (domain === "medical") {
+            fieldsHTML = `
+                <input type="number" name="marks[]" placeholder="Physics Marks (out of 100)" required>
+                <input type="number" name="marks[]" placeholder="Chemistry Marks (out of 100)" required>
+                <input type="number" name="marks[]" placeholder="Biology Marks (out of 100)" required>
+            `;
+        } else if (domain === "commerce") {
+            fieldsHTML = `
+                <input type="number" name="marks[]" placeholder="Math Marks (out of 100)" required>
+                <input type="number" name="marks[]" placeholder="Economics Marks (out of 100)" required>
+                <input type="number" name="marks[]" placeholder="Accountancy Marks (out of 100)" required>
+                <input type="number" name="marks[]" placeholder="Business Studies Marks (out of 100)" required>
+            `;
+        } else if (domain === "law") {
+            fieldsHTML = `
+                <input type="number" name="marks[]" placeholder="English Marks (out of 100)" required>
+                <input type="number" name="marks[]" placeholder="History Marks (out of 100)" required>
+                <input type="number" name="marks[]" placeholder="Political Science Marks (out of 100)" required>
+                <input type="number" name="marks[]" placeholder="Other Subject Marks (out of 100)" required>
+            `;
+        } else if (domain === "mba") {
+            fieldsHTML = `
+                <input type="number" name="marks[]" placeholder="Entrance Exam Score (out of 300)" required>
+                <input type="number" name="marks[]" placeholder="Undergraduate Score (out of 100)" required>
+                <input type="number" name="marks[]" placeholder="Work Experience (in years)" required>
+            `;
+        } else if (domain === "msc") {
+            fieldsHTML = `
+                <input type="number" name="marks[]" placeholder="Core Subject Marks (out of 100)" required>
+                <input type="number" name="marks[]" placeholder="Elective Subject Marks (out of 100)" required>
+            `;
+        }
+
+        // Add fields to marksFields div and hide the result on any change
+        marksFields.innerHTML = fieldsHTML;
+        resultDiv.style.display = "none";
+
+        // Add event listeners to each new input field
+        const inputs = marksFields.querySelectorAll("input");
+        inputs.forEach(input => {
+            input.addEventListener("input", () => {
+                resultDiv.style.display = "none";
+            });
+        });
+    }
+
+    // Function to show the result after submission
+    function showResult() {
+        document.getElementById("result").style.display = "block";
+    }
+</script>
+
+</body>
+</html>
